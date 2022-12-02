@@ -13,8 +13,7 @@ function sum(...args) {
 }
 
 function getElfCalories(elf) {
-  return elf
-    .map((n) => Number.parseInt(n)).reduce((r, i) => r + i);
+  return sum(...elf.map((n) => Number.parseInt(n)))
 }
 
 module.exports.replaceMax = replaceMax;
