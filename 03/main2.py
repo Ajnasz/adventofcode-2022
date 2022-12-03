@@ -2,12 +2,12 @@
 
 import math
 
-def find_dup(compartments):
-  for i in compartments[0]:
-    if i in compartments[1]:
-      return i
+def find_common_items(line1, line2):
+  return ''.join({char for char in line1 if char in line2})
 
-  return None
+def find_3_commons(lines):
+  commons1 = find_common_items(set(lines[0]), set(lines[1]))
+  return find_common_items(commons1, set(lines[2]))
 
 def get_compartments(line):
   mid = math.ceil(len(line) / 2)
@@ -33,8 +33,15 @@ def get_priority(char):
 
 with open('input') as f:
   out = 0
+
+  group = []
   for line in f:
-    dup = find_dup(get_compartments(line.strip()))
-    out += get_priority(dup)
+    group.append(line.strip())
+
+    if len(group) == 3:
+      common = find_3_commons(group)
+      group = []
+
+      out += get_priority(common)
 
   print(out)
