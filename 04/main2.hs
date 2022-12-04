@@ -1,6 +1,3 @@
--- import System.IO
--- import Data.List
-
 split :: Char -> String -> [String]
 split _ [] = [""]
 split x (c:cs) | c == x = "" : rest
@@ -31,28 +28,6 @@ sectionContains sectionA sectionB = headOverlaps sectionA sectionB || lastOverla
 anySectionContains :: [Int] -> [Int] -> Bool
 anySectionContains sectionA sectionB = sectionContains sectionA sectionB || sectionContains sectionB sectionA
 
--- readLine :: Handle -> Int
-
--- readLine inputHandle = do
---   ineof <- hIsEOF inputHandle
-
---   if ineof
---   then return 0
---   else do
---     inputStr <- hGetLine inputHandle
---     let sections = getElfPairs inputStr
---     let x = map mapARange sections
-
---     return 1
---     return 1 + (readLine inputHandle)
-
---     if anySectionContains (head x) (last x)
---     then
---       1 + (readLine inputHandle)
---     else
---       0 + (readLine inputHandle)
-
-
 countThing :: [[[Int]]] -> Int
 countThing lines = do
   if length lines == 0 then 0
@@ -69,6 +44,3 @@ main = do
   let lines = map getElfPairs strlines
   let numLines = (map (\line -> map mapARange line) lines)
   print(countThing numLines)
-  -- inputHandle <- openFile "input" ReadMode
-  -- let x = readLine inputHandle
-  -- print("asdf")
