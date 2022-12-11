@@ -12,7 +12,7 @@ class Operation {
     value = v;
   }
 
-  String toHumanString() {
+  public String toString() {
     String strValue = Integer.toString(value);
     return "type: " + type + ", " + strValue;
   }
@@ -86,6 +86,35 @@ class Inspect {
   }
 }
 
+class GPU {
+  private void debug(int cycleCount, int register) {
+    System.out.print(cycleCount);
+    System.out.print(" ");
+    System.out.print(register);
+    System.out.print(" ");
+    System.out.print(cycleCount == register || cycleCount == register + 1 || cycleCount == register - 1);
+    System.out.print(" ");
+    System.out.print(register % 40);
+    System.out.println();
+  }
+
+  private void print(int cycleCount, int register) {
+    if (cycleCount == 0) {
+      System.out.println();
+    }
+
+    if (cycleCount == register || cycleCount == register + 1 || cycleCount == register - 1) {
+      System.out.print('#');
+    } else {
+      System.out.print('.');
+    }
+  }
+
+  void cycle(int cycleCount, int register) {
+    print((cycleCount - 1) % 40, register);
+  }
+}
+
 class CPU {
   private int register;
   private int cycleCount;
@@ -122,31 +151,30 @@ class CPU {
   }
 
   public void cycle() {
-    System.out.println(operations.size());
-
-    Inspect inspector = new Inspect();
+    Inspect inspector = new Inspect(); GPU gpu = new GPU();
     int cycleCount = 1;
 
     int sum = 0;
-    int opIndex = -1;
+    int opIndex = 0;
 
     while(true) {
       if (operation == null) {
-        opIndex += 1;
-        if (opIndex >= operations.size()) {
-          return;
-        }
         operation = getOp(opIndex);
       }
 
-      inspector.setCycle(cycleCount, register, opIndex);
+      // inspector.setCycle(cycleCount, register, opIndex);
 
-      inspector.inspect();
+      // inspector.inspect();
 
+      gpu.cycle(cycleCount, register);
       register = operation.exec(register);
 
       if (operation.isDone()) {
         operation = null;
+        opIndex += 1;
+        if (opIndex >= operations.size()) {
+          return;
+        }
       }
 
       cycleCount += 1;
@@ -172,8 +200,9 @@ class Main {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
-    cpu.cycle();
 
-    System.out.println("done.");
+    System.out.println("START");
+    cpu.cycle();
+    System.out.println();
   }
 }
